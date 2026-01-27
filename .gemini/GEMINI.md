@@ -36,6 +36,6 @@
 4. **安全**: 严禁硬编码 Key，使用 `OPENAI_API_KEY` 环境变量。
 
 ## 🛠️ 关键上下文
-- 数据库支持 pgvector 扩展及 HNSW 索引。
-- API 错误处理遵循 RFC 7807 (`ProblemDetail`)。
-- 集成 GitHub Actions 执行 `mvn package` 构建。
+- **进度追踪**: 每次会话开始时，必须首先读取根目录下的 `TODO.md` 以及 `docs/TROUBLESHOOTING.md`。
+- **防御性开发**: 在修改 DDL、Entity 或网络请求逻辑时，必须参考 `docs/TROUBLESHOOTING.md` 以避免重复 H2 兼容性或代理干扰等错误。
+- 每次修改核心逻辑后，必须检查并提示用户更新 `docs/ARCHITECTURE.md`。

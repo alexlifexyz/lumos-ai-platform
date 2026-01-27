@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS ideas (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    uuid UUID NOT NULL UNIQUE,
+    title VARCHAR(255) NOT NULL,
+    content CLOB NOT NULL,
+    tags VARCHAR(1000),
+    metadata VARCHAR(2000),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS idea_vectors (
+    idea_id BIGINT PRIMARY KEY,
+    embedding VARCHAR(MAX), -- Store as string in H2
+    model_version VARCHAR(50)
+);

@@ -37,6 +37,9 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 ## 5. 后续规划
 详细的待办事项和技术演进路线请参考根目录下的 [TODO.md](../TODO.md)。
 
+## 6. 避坑指南与工程规范
+为确保项目在异构环境下的一致性，所有开发者必须遵守 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 中记录的准则。
+
 ## 5. 开发与部署
 - **Docker 模式 (推荐)**: 运行 `docker-compose up`，使用 Postgres + pgvector。
 - **Local 模式 (降级)**: 使用 Profile `local` (`-Dspring.profiles.active=local`)，启动 H2 内存数据库。

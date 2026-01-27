@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -47,12 +46,12 @@ public class IdeaEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(columnDefinition = "varchar[]")
-    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(columnDefinition = "TEXT")
+    @Convert(converter = ListConverter.class)
     private List<String> tags;
 
-    @Column(columnDefinition = "jsonb")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "TEXT")
+    @Convert(converter = JsonConverter.class)
     private Map<String, Object> metadata;
 
     @CreatedDate
