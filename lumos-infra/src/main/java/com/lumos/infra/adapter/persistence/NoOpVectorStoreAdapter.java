@@ -18,4 +18,10 @@ public class NoOpVectorStoreAdapter implements VectorStorePort {
     public void saveVector(Long ideaId, List<Double> vector) {
         log.info("[MOCK] Skipping vector persistence for Idea ID: {} (H2 mode)", ideaId);
     }
+
+    @Override
+    public List<Long> searchVectors(List<Double> queryVector, int limit) {
+        log.info("[MOCK] Searching vectors (H2 mode). Returning empty list.");
+        return List.of();
+    }
 }

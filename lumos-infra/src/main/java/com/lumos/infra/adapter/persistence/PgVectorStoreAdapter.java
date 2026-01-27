@@ -36,4 +36,22 @@ public class PgVectorStoreAdapter implements VectorStorePort {
         
         log.info("Saved vector for Idea ID: {}", ideaId);
     }
+
+    @Override
+    public List<Long> searchVectors(List<Double> queryVector, int limit) {
+        String vectorStr = queryVector.toString();
+
+        // Cosine distance search: order by embedding <=> query_vector
+        String sql = """
+            SELECT idea_id FROM idea_vectors 
+            ORDER BY embedding <=> :queryVector::vector 
+            LIMIT :limit
+        """;
+
+        return jdbcClient.sql(sql)
+                .param("queryVector", vectorStr)
+                .param("limit", limit)
+                .query(Long.class)
+                .list();
+    }
 }

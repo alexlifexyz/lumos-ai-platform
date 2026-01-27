@@ -1,5 +1,6 @@
 package com.lumos.infra.adapter;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +29,13 @@ public class IdeaRepositoryAdapter implements IdeaRepositoryPort {
     @Override
     public Optional<Idea> findByUuid(UUID uuid) {
         return jpaRepository.findByUuid(uuid).map(this::toDomain);
+    }
+
+    @Override
+    public List<Idea> findAllByIds(List<Long> ids) {
+        return jpaRepository.findAllById(ids).stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     // Simple manual mapper to avoid MapStruct dependency overhead for now
