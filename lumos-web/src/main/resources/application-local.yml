@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:lumos_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop # H2 模式下直接由 Hibernate 自动生成表结构，省去维护两套 SQL
+  
+  flyway:
+    enabled: false # H2 模式下禁用 Flyway，直接用 JPA ddl-auto，因为 pgvector 语法 H2 不支持
+
+  # 模拟 Redis (Spring Data Redis 会自动处理，如果连接失败通常会报错，这里先保留，后续可能需要 Mock)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 1000ms

@@ -1,0 +1,44 @@
+services:
+  lumos-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: lumos-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: lumos_admin
+      POSTGRES_PASSWORD: lumos_password
+      POSTGRES_DB: lumos_db
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - lumos-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lumos_admin -d lumos_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  lumos-redis:
+    image: redis:alpine
+    container_name: lumos-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - lumos-net
+
+  # Optional: Run Ollama locally via Docker if not installed on host
+  # lumos-ollama:
+  #   image: ollama/ollama
+  #   container_name: lumos-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ./data/ollama:/root/.ollama
+  #   networks:
+  #     - lumos-net
+
+networks:
+  lumos-net:
+    driver: bridge

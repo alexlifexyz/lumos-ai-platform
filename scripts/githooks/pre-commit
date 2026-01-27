@@ -1,0 +1,13 @@
+#!/bin/bash
+# 检查架构文档一致性
+
+# 检查是否有 Java 或配置文件变动
+STAGED_CODE=$(git diff --cached --name-only | grep -E '\.java$|\.xml$|\.yml$|\.properties$')
+# 检查架构文档是否变动
+STAGED_DOC=$(git diff --cached --name-only | grep 'docs/ARCHITECTURE.md')
+
+if [ -n "$STAGED_CODE" ] && [ -z "$STAGED_DOC" ]; then
+    echo -e "\033[0;31m❌ 错误: 您修改了源代码，但未更新 docs/ARCHITECTURE.md\033[0m"
+    echo -e "\033[1;33m💡 请更新架构文档以保持 AI 上下文同步，或者使用 git commit --no-verify 强制提交。\033[0m"
+    exit 1
+fi
