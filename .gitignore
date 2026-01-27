@@ -37,3 +37,6 @@ build/
 ### Logs ###
 logs/
 *.log
+
+### Data ###
+data/

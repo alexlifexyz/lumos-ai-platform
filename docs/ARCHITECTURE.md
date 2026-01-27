@@ -27,7 +27,7 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 |------|------|
 | `lumos-api` | 共享内核：DTOs (`CreateIdeaRequest`, `IdeaResponse`), Exceptions, 公共工具类。 |
 | `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、Agent 定义、Domain Models。定义了 `EmbeddingPort` 和 `VectorStorePort`。 |
-| `lumos-infra`| 基础设施实现：DB 访问、Redis 配置、Spring AI 适配器 (`SpringAiEmbeddingAdapter`, `PgVectorStoreAdapter`)。 |
+| `lumos-infra`| 基础设施实现：DB 访问、Redis 配置、Spring AI 适配器 (`SpringAiEmbeddingAdapter`, `PgVectorStoreAdapter`)。开启了 JPA Auditing 自动记录创建/更新时间。 |
 | `lumos-web`  | Web 入口：启动类、REST Controllers (`IdeaController`)、Swagger 配置、全局异常处理 (`GlobalExceptionHandler`)。 |
 
 ## 4. 核心工作流

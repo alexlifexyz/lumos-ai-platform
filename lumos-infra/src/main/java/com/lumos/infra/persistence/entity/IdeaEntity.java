@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -46,12 +47,13 @@ public class IdeaEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(columnDefinition = "TEXT")
-    @Convert(converter = ListConverter.class)
+    // Restore Postgres-optimized types
+    @Column
+    @JdbcTypeCode(SqlTypes.ARRAY)
     private List<String> tags;
 
-    @Column(columnDefinition = "TEXT")
-    @Convert(converter = JsonConverter.class)
+    @Column
+    @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Object> metadata;
 
     @CreatedDate
