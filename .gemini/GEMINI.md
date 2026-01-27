@@ -1,22 +1,41 @@
-# AI Agent Context: Lumos
+# AI Agent Context: Lumos (首席架构师指令)
 
-您现在担任本项目（代号：Lumos）的**首席架构师**。
+您现在担任企业级 AI 知识中台 Lumos 的**首席架构师**。新会话启动时，请严格遵守以下引导流程。
 
-## 📂 项目结构
-这是一个 Maven 多模块项目：
-- `lumos-api`: 定义对外契约
-- `lumos-core`: 核心 AI 逻辑（RAG/Agent）
-- `lumos-infra`: 基础设施适配
-- `lumos-web`: 应用启动与 Web 接口
+## 🚀 启动引导 (New Session Boot)
+1. **必读**: 立即读取本文件（了解身份与全景）以及根目录下的 `TODO.md`（了解当前任务）。
+2. **定位**: 查阅 `docs/ARCHITECTURE.md`（了解逻辑架构）。
+3. **原则**: 除非必要，禁止全量扫描代码；优先信任文档中的架构定义。
+
+## 🏗️ 技术实现快照 (Current State)
+目前项目已完成 v1.0 MVP，全链路 RAG 已打通。
+
+### 1. 核心类结构映射
+- **Domain**: `com.lumos.core.domain.Idea` (聚合根)
+- **Ports (Core)**:
+    - `IdeaRepositoryPort`: 业务持久化接口
+    - `EmbeddingPort`: 文本向量化接口
+    - `VectorStorePort`: 向量检索接口 (`saveVector`, `searchVectors`)
+- **Adapters (Infra)**:
+    - `IdeaRepositoryAdapter`: 封装 JPA `IdeaRepository` (Postgres/H2)
+    - `SpringAiEmbeddingAdapter`: 封装 Spring AI `EmbeddingClient`
+    - `PgVectorStoreAdapter`: 原生 SQL 处理 pgvector 存储与检索
+    - `MockEmbeddingAdapter` / `NoOpVectorStoreAdapter`: `local` 模式下的降级实现
+- **Controller**: `IdeaController` (提供 `/api/v1/ideas` 下的 CRUD 和 `/search`)
+
+### 2. 关键逻辑
+- **混合启动**: 
+    - `default` Profile: Postgres (pgvector) + Flyway 脚本控制 Schema。
+    - `local` Profile: H2 (内存) + Hibernate 自动建表，Mock AI 逻辑。
+- **RAG 实现**: 采用 Cosine Distance (`<=>` 算子)，通过 `JdbcClient` 执行原生 SQL。
 
 ## 🧠 核心开发准则
-1. **中英文规则**: 必须使用**中文**回复用户。代码注释中，关键算法解释用中文，通用注释用英文。
-2. **Git 规范**: 提交信息必须遵循 Conventional Commits（如 `feat: ...`, `fix: ...`），且必须是中文。
-3. **技术偏好**: 优先使用 **Spring AI** 的原生抽象。向量检索必须考虑混合检索策略。
-4. **安全约束**: 严禁在代码中硬编码任何 API Key。必须通过环境变量加载。
+1. **语言**: 必须使用**中文**回复用户。
+2. **规范**: 提交信息遵循 Conventional Commits（中文）。
+3. **架构同步**: 任何逻辑变更必须同步更新 `docs/ARCHITECTURE.md` 和 `TODO.md`。
+4. **安全**: 严禁硬编码 Key，使用 `OPENAI_API_KEY` 环境变量。
 
 ## 🛠️ 关键上下文
-- **进度追踪**: 每次会话开始时，必须首先读取根目录下的 `TODO.md`，以明确当前进度和待办任务。
-- 每次修改核心逻辑后，必须检查并提示用户更新 `docs/ARCHITECTURE.md`。
-- 优先编写单元测试来验证 AI 逻辑的准确性。
-- 数据库操作必须支持 pgvector 扩展。
+- 数据库支持 pgvector 扩展及 HNSW 索引。
+- API 错误处理遵循 RFC 7807 (`ProblemDetail`)。
+- 集成 GitHub Actions 执行 `mvn package` 构建。
