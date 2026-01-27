@@ -49,10 +49,26 @@
 - [ ] **Phase 2: AI 能力接入 (进行中)**
     - [ ] Spring AI 集成
     - [ ] Embedding 生成与存储
-    - [ ] RAG 检索服务
-- [ ] **Phase 3: API 与 Agent**
-    - [ ] REST 接口暴露
-    - [ ] Text-to-SQL Agent
+    - [x] RAG 检索服务
+- [x] **Phase 3: API 与 Agent**
+    - [x] REST 接口暴露
+    - [x] Text-to-SQL Agent (通过 IdeaService 间接实现)
+- [x] **Phase 4: 工程化**
+    - [x] 全局异常处理
+    - [x] 单元测试 (JUnit 5 + Mockito)
+    - [x] GitHub Actions CI
+
+## 🧪 测试 (Testing)
+
+项目包含核心业务逻辑的单元测试。
+
+运行所有测试：
+```bash
+mvn test
+```
+
+### CI/CD
+本项目集成了 GitHub Actions。每次推送到 `main` 分支或发起 Pull Request 时，会自动触发 Maven 构建和测试流程。配置文件位于 `.github/workflows/ci.yml`。
 
 ## 🤝 贡献与规范
 - 提交代码前请确保通过 `pre-commit` 钩子检查。
