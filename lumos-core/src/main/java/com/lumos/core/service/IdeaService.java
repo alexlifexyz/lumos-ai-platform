@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 public class IdeaService {
 
     private final IdeaRepositoryPort ideaRepository;
+    private final com.lumos.core.port.out.EmbeddingPort embeddingPort;
+    private final com.lumos.core.port.out.VectorStorePort vectorStorePort;
 
     @Transactional
     public Idea createIdea(Idea idea) {
@@ -24,8 +26,23 @@ public class IdeaService {
             idea.setUuid(UUID.randomUUID());
         }
         log.info("Creating new idea: {}", idea.getTitle());
-        // TODO: In Day 3, we will add Embedding generation here
-        return ideaRepository.save(idea);
+        
+        // 1. Persist Core Data
+        Idea savedIdea = ideaRepository.save(idea);
+
+        // 2. Generate Embedding (Async candidate, but sync for simplicity now)
+        try {
+            var vector = embeddingPort.embed(savedIdea.getContent());
+            
+            // 3. Persist Vector
+            vectorStorePort.saveVector(savedIdea.getId(), vector);
+        } catch (Exception e) {
+            log.error("Failed to generate/save vector for idea: {}", savedIdea.getId(), e);
+            // We don't rollback the Idea creation just because vector failed, 
+            // but in strict RAG apps, maybe we should. For now, log and continue.
+        }
+
+        return savedIdea;
     }
 
     @Transactional(readOnly = true)
