@@ -33,8 +33,7 @@ spring:
 
   # AI Configuration
   ai:
-    openai:
-      api-key: ${OPENAI_API_KEY:} # 默认为空，触发 ConditionalOnProperty 的负值
-      chat:
-        options:
-          model: gpt-3.5-turbo
+    api-key: ${OPENAI_API_KEY:}
+    base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+    chat-model: ${OPENAI_CHAT_MODEL:gpt-3.5-turbo}
+    embedding-model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}

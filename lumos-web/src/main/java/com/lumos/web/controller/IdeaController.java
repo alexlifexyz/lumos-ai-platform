@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/ideas")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class IdeaController {
 
     private final IdeaService ideaService;
@@ -52,7 +53,13 @@ public class IdeaController {
     }
 
     @GetMapping("/search")
-    public List<IdeaResponse> search(@RequestParam String query, @RequestParam(defaultValue = "5") int limit) {
+    public List<IdeaResponse> search(
+            @RequestParam(value = "query", required = false, defaultValue = "") String query, 
+            @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        log.info("Received search request with query: [{}], limit: [{}]", query, limit);
+        if (query.isBlank()) {
+            return List.of();
+        }
         return searchService.search(query, limit).stream()
                 .map(this::toResponse)
                 .toList();

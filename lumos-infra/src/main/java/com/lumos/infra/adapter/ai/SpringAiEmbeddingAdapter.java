@@ -12,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Profile("openai")
+@Profile("!local")
+@org.springframework.boot.autoconfigure.condition.ConditionalOnBean(EmbeddingClient.class)
 @Slf4j
 public class SpringAiEmbeddingAdapter implements EmbeddingPort {
 

@@ -29,12 +29,10 @@ public class SearchService {
         // 1. Embed the query
         List<Double> queryVector = embeddingPort.embed(query);
 
-        // 2. Vector Search (Retrieve IDs)
-        List<Long> ideaIds = vectorStorePort.searchVectors(queryVector, limit);
+        // 2. Hybrid Search (Vector + Keyword)
+        List<Long> ideaIds = vectorStorePort.searchHybrid(queryVector, query, limit);
         
-        if (ideaIds.isEmpty()) {
-            return List.of();
-        }
+        log.info("Search found {} candidates", ideaIds.size());
 
         // 3. Hydrate content (Fetch details from DB)
         // In a real system, we might want to preserve the order returned by vector store.

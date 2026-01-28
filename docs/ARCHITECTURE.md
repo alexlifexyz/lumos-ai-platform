@@ -19,21 +19,23 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 ## 2. 技术栈
 - **Backend**: Java 17, Spring Boot 3.2.5, Spring AI 0.8.1
 - **Database**: PostgreSQL 16 + pgvector (向量存储)
-- **Infra**: Docker, Redis (缓存与会话管理)
-- **Build**: Maven
+- **AI Protocol**: 统一采用 OpenAI 兼容协议，支持 OpenAI, Kimi, 智谱, 千问等。
+- **Infra**: Docker, Redis
 
 ## 3. 模块职责 (Maven Multi-Module)
 | 模块 | 职责 |
 |------|------|
-| `lumos-api` | 共享内核：DTOs (`CreateIdeaRequest`, `IdeaResponse`), Exceptions, 公共工具类。 |
-| `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、Agent 定义、Domain Models。定义了 `EmbeddingPort` 和 `VectorStorePort`。 |
-| `lumos-infra`| 基础设施实现：DB 访问、Redis 配置、Spring AI 适配器 (`SpringAiEmbeddingAdapter`, `PgVectorStoreAdapter`)。开启了 JPA Auditing 自动记录创建/更新时间。 |
-| `lumos-web`  | Web 入口：启动类、REST Controllers (`IdeaController`)、Swagger 配置、全局异常处理 (`GlobalExceptionHandler`)。启动类显式排除了 Spring AI 自动配置以确保在无 Key 环境下的稳定性。 |
+| `lumos-api` | 共享内核：DTOs, Exceptions, 公共工具类。 |
+| `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、Domain Models。支持混合检索 (Hybrid Search)。 |
+| `lumos-infra`| 基础设施：`LumosAiConfiguration` (极简 OpenAI 协议工厂)、`PgVectorStoreAdapter` (混合检索 SQL 实现)。 |
+| `lumos-web`  | Web 入口：REST API、Swagger、全局异常处理。 |
 
 ## 4. 核心工作流
-- **启动弹性**: 系统根据 Profile 自动切换实现。若未配置 `openai` Profile，则自动加载 Mock 实现，确保“零配置”启动。
-- **RAG 流**: 文本 -> EmbeddingClient -> pgvector (HNSW) -> Prompt 增强 -> LLM。
-- **Agent 流**: 用户提问 -> Function Calling (Text-to-SQL) -> DB 查询 -> 结果摘要。
+- **混合检索流**: 
+    1. 用户查询 -> 生成 Embedding。
+    2. 执行混合 SQL：`(0.7 * 向量相似度) + (0.3 * 全文检索得分)`。
+    3. 结合 `tsvector` 与 `pgvector` 确保召回率。
+- **启动弹性**: 仅需 `OPENAI_API_KEY`、`OPENAI_BASE_URL`、`OPENAI_MODEL` 三个变量即可适配主流厂商。未配置时自动降级为 Mock 模式。
 
 ## 5. 后续规划
 详细的待办事项和技术演进路线请参考根目录下的 [TODO.md](../TODO.md)。

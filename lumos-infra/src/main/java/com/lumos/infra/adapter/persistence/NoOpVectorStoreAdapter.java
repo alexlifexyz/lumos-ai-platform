@@ -24,4 +24,10 @@ public class NoOpVectorStoreAdapter implements VectorStorePort {
         log.info("[MOCK] Searching vectors (H2 mode). Returning empty list.");
         return List.of();
     }
+
+    @Override
+    public List<Long> searchHybrid(List<Double> queryVector, String keyword, int limit) {
+        log.info("[MOCK] Searching hybrid (H2 mode). Returning empty list.");
+        return List.of();
+    }
 }

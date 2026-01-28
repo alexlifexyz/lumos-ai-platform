@@ -21,35 +21,45 @@ public class PgVectorStoreAdapter implements VectorStorePort {
 
     @Override
     public void saveVector(Long ideaId, List<Double> vector) {
-        // Convert List<Double> to String format "[0.1,0.2,...]" compatible with pgvector
         String vectorStr = vector.toString(); 
-        
-        // Use native SQL insert
         String sql = "INSERT INTO idea_vectors (idea_id, embedding, model_version) VALUES (:id, :embedding::vector, :version) " +
                      "ON CONFLICT (idea_id) DO UPDATE SET embedding = EXCLUDED.embedding";
 
         jdbcClient.sql(sql)
                 .param("id", ideaId)
                 .param("embedding", vectorStr)
-                .param("version", "text-embedding-3-small") // Hardcoded for Phase 1
+                .param("version", "text-embedding-v1") 
                 .update();
-        
         log.info("Saved vector for Idea ID: {}", ideaId);
     }
 
     @Override
     public List<Long> searchVectors(List<Double> queryVector, int limit) {
         String vectorStr = queryVector.toString();
+        String sql = "SELECT idea_id FROM idea_vectors ORDER BY embedding <=> :queryVector::vector LIMIT :limit";
+        return jdbcClient.sql(sql)
+                .param("queryVector", vectorStr)
+                .param("limit", limit)
+                .query(Long.class)
+                .list();
+    }
 
-        // Cosine distance search: order by embedding <=> query_vector
+    @Override
+    public List<Long> searchHybrid(List<Double> queryVector, String keyword, int limit) {
+        String vectorStr = queryVector.toString();
         String sql = """
-            SELECT idea_id FROM idea_vectors 
-            ORDER BY embedding <=> :queryVector::vector 
+            SELECT i.id FROM ideas i
+            LEFT JOIN idea_vectors v ON i.id = v.idea_id
+            ORDER BY (
+                0.7 * (1 - COALESCE(v.embedding <=> :queryVector::vector, 1)) + 
+                0.3 * ts_rank(to_tsvector('english', i.content || ' ' || i.title), plainto_tsquery('english', :keyword))
+            ) DESC
             LIMIT :limit
         """;
 
         return jdbcClient.sql(sql)
                 .param("queryVector", vectorStr)
+                .param("keyword", keyword)
                 .param("limit", limit)
                 .query(Long.class)
                 .list();

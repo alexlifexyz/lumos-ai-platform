@@ -17,4 +17,13 @@ public interface VectorStorePort {
      * @return 匹配的 Idea ID 列表 (按相似度排序)
      */
     List<Long> searchVectors(List<Double> queryVector, int limit);
+
+    /**
+     * 混合检索 (向量相似度 + 关键词匹配)
+     * @param queryVector 查询向量
+     * @param keyword 原始关键词
+     * @param limit 返回数量
+     * @return 匹配的 ID 列表
+     */
+    List<Long> searchHybrid(List<Double> queryVector, String keyword, int limit);
 }
