@@ -33,7 +33,9 @@
 1. **语言**: 必须使用**中文**回复用户。
 2. **规范**: 提交信息遵循 Conventional Commits（中文）。
 3. **架构同步**: 任何逻辑变更必须同步更新 `docs/ARCHITECTURE.md` 和 `TODO.md`。
-4. **安全**: 严禁硬编码 Key，使用 `OPENAI_API_KEY` 环境变量。
+4. **安全**: 
+    - 严禁硬编码 Key，使用 `OPENAI_API_KEY` 环境变量。
+    - **严禁提交 `.env` 文件**：在执行 `git add` 之前必须核对状态，确保敏感配置文件处于 `.gitignore` 中。若误读，必须立即 `git rm --cached` 并回滚。
 
 ## 🛠️ 关键上下文
 - **进度追踪**: 每次会话开始时，必须首先读取根目录下的 `TODO.md` 以及 `docs/TROUBLESHOOTING.md`。
