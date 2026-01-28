@@ -5,7 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages = "com.lumos")
+@SpringBootApplication(
+    scanBasePackages = "com.lumos",
+    exclude = {
+        org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.class,
+        org.springframework.ai.autoconfigure.ollama.OllamaAutoConfiguration.class
+    }
+)
 @EntityScan(basePackages = "com.lumos.infra.persistence.entity")
 @EnableJpaRepositories(basePackages = "com.lumos.infra.persistence.repository")
 @org.springframework.data.jpa.repository.config.EnableJpaAuditing

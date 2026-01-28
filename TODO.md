@@ -1,6 +1,13 @@
 # Lumos 项目演进路线图 (Phase 2 & Beyond)
 
-本项目旨在通过 Java 工程化手段解决 AI 落地痛点。以下特性是简历中“Java 转 AI 开发”的核心亮点。
+本项目旨在通过 Java 工程化手段解决 AI 落地痛点。
+
+## ✅ Phase 1: 核心基建与 MVP (已完成)
+- [x] Maven 多模块 Modular Monolith 架构。
+- [x] PostgreSQL (pgvector) + Redis 容器化编排。
+- [x] 全链路 RAG 闭环 (存/取/搜)。
+- [x] H2/Postgres 双模启动与降级策略。
+- [x] 工程化质量保障 (Unit Test, Global Exception, CI)。
 
 ## 🚀 Phase 2: 智能代理与 RAG 深度优化 (高优先级)
 

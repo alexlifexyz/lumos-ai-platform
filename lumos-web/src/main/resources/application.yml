@@ -31,10 +31,10 @@ spring:
       host: localhost
       port: 6379
 
-  # AI Configuration (Placeholder for Day 3)
+  # AI Configuration
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY:sk-dummy-key}
+      api-key: ${OPENAI_API_KEY:} # 默认为空，触发 ConditionalOnProperty 的负值
       chat:
         options:
           model: gpt-3.5-turbo

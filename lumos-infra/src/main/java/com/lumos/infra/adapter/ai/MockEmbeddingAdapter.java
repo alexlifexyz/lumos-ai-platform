@@ -11,7 +11,7 @@ import com.lumos.core.port.out.EmbeddingPort;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Profile("local")
+@Profile("!openai & !ollama")
 @Slf4j
 public class MockEmbeddingAdapter implements EmbeddingPort {
 
@@ -19,6 +19,6 @@ public class MockEmbeddingAdapter implements EmbeddingPort {
     public List<Double> embed(String text) {
         log.info("[MOCK] Generating dummy embedding for text: {}", text);
         // Return an empty list or random numbers, just to pass the flow
-        return Collections.nCopies(1536, 0.0d);
+        return java.util.Collections.nCopies(1536, 0.0d);
     }
 }

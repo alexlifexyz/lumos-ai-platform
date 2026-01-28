@@ -12,12 +12,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Profile("!local") // 仅在非 local 模式下激活
-@RequiredArgsConstructor
+@Profile("openai")
 @Slf4j
 public class SpringAiEmbeddingAdapter implements EmbeddingPort {
 
     private final EmbeddingClient embeddingClient;
+
+    public SpringAiEmbeddingAdapter(EmbeddingClient embeddingClient) {
+        this.embeddingClient = embeddingClient;
+    }
 
     @Override
     public List<Double> embed(String text) {
