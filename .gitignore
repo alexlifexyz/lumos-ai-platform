@@ -40,3 +40,4 @@ logs/
 
 ### Data ###
 data/
+.env

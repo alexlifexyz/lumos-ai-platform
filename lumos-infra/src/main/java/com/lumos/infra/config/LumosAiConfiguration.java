@@ -1,50 +1,39 @@
 package com.lumos.infra.config;
 
-import org.springframework.ai.openai.OpenAiChatClient;
-import org.springframework.ai.openai.OpenAiEmbeddingClient;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
 public class LumosAiConfiguration {
 
-    @Value("${app.ai.api-key:}")
-    private String apiKey;
-
-    @Value("${app.ai.base-url:https://api.openai.com/v1}")
+    @Value("${spring.ai.openai.base-url:https://api.openai.com}")
     private String baseUrl;
 
-    @Value("${app.ai.chat-model:gpt-3.5-turbo}")
-    private String chatModel;
-
-    @Value("${app.ai.embedding-model:text-embedding-3-small}")
-    private String embeddingModel;
+    @Value("${spring.ai.openai.api-key:}")
+    private String apiKey;
 
     @Bean
-    @ConditionalOnExpression("!'${app.ai.api-key:}'.isEmpty()")
     public OpenAiApi openAiApi() {
-        log.info("Initializing AI API with BaseURL: {}", baseUrl);
-        return new OpenAiApi(baseUrl, apiKey);
-    }
+        String fixedUrl = baseUrl;
+        
+        // 核心逻辑：如果 URL 以 /v1 结尾，则移除它
+        // 因为 Spring AI 的 OpenAiApi 会自动在 baseUrl 后面拼接 /v1
+        if (fixedUrl != null && fixedUrl.endsWith("/v1")) {
+            fixedUrl = fixedUrl.substring(0, fixedUrl.length() - 3);
+            log.info("Detected redundant '/v1' in Base URL, automatically fixed to: {}", fixedUrl);
+        } else if (fixedUrl != null && fixedUrl.endsWith("/v1/")) {
+            fixedUrl = fixedUrl.substring(0, fixedUrl.length() - 4);
+            log.info("Detected redundant '/v1/' in Base URL, automatically fixed to: {}", fixedUrl);
+        }
 
-    @Bean
-    @ConditionalOnBean(OpenAiApi.class)
-    public OpenAiEmbeddingClient embeddingClient(OpenAiApi openAiApi) {
-        log.info("Initializing Embedding Client with Model: {}", embeddingModel);
-        return new OpenAiEmbeddingClient(openAiApi);
-    }
+        if (apiKey == null || apiKey.isEmpty()) {
+            log.warn("OpenAI API Key is missing! AI features will not work.");
+        }
 
-    @Bean
-    @ConditionalOnBean(OpenAiApi.class)
-    public OpenAiChatClient chatClient(OpenAiApi openAiApi) {
-        log.info("Initializing Chat Client with Model: {}", chatModel);
-        return new OpenAiChatClient(openAiApi);
+        return new OpenAiApi(fixedUrl, apiKey);
     }
 }

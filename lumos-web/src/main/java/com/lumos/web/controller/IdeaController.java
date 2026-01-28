@@ -20,8 +20,11 @@ import com.lumos.core.domain.Idea;
 import com.lumos.core.service.IdeaService;
 import com.lumos.core.service.SearchService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "Ideas", description = "知识点管理接口")
 @RestController
 @RequestMapping("/api/v1/ideas")
 @RequiredArgsConstructor

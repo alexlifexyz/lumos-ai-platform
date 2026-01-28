@@ -12,10 +12,10 @@
 ## 🚀 Phase 2: 智能代理与 RAG 深度优化 (高优先级)
 
 ### 1. 智能代理 (Agentic AI)
-- [ ] **Text-to-SQL 专家**: 利用 Spring AI Function Calling 实现自然语言查询数据库。
-    - [ ] 定义只读数据库查询工具。
-    - [ ] 编写 System Prompt 注入 Schema 上下文。
-    - [ ] 实现结果摘要与数据可视化 DTO。
+- [x] **Text-to-SQL 专家**: 利用 Spring AI Function Calling 实现自然语言查询数据库。
+    - [x] 定义只读数据库查询工具。
+    - [x] 编写 System Prompt 注入 Schema 上下文。
+    - [x] 实现结果摘要与数据可视化 DTO。
 
 ### 2. RAG 检索质量优化
 - [ ] **混合检索 (Hybrid Search)**: 结合 Postgres 全文检索 (tsvector) 与向量检索 (pgvector)。

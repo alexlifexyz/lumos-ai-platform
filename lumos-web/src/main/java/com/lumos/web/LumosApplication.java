@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(
     scanBasePackages = "com.lumos",
     exclude = {
-        org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.class,
         org.springframework.ai.autoconfigure.ollama.OllamaAutoConfiguration.class
     }
 )

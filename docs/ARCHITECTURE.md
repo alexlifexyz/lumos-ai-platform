@@ -26,8 +26,8 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 | 模块 | 职责 |
 |------|------|
 | `lumos-api` | 共享内核：DTOs, Exceptions, 公共工具类。 |
-| `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、Domain Models。支持混合检索 (Hybrid Search)。 |
-| `lumos-infra`| 基础设施：`LumosAiConfiguration` (极简 OpenAI 协议工厂)、`PgVectorStoreAdapter` (混合检索 SQL 实现)。 |
+| `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、智能代理 (`AgenticService`)、Domain Models。支持混合检索 (Hybrid Search)。 |
+| `lumos-infra`| 基础设施：`LumosAiConfiguration` (极简 OpenAI 协议工厂)、`PgVectorStoreAdapter` (混合检索 SQL 实现)、`DatabaseAgentConfig` (Text-to-SQL 工具)。 |
 | `lumos-web`  | Web 入口：REST API、Swagger、全局异常处理。 |
 
 ## 4. 核心工作流
@@ -35,16 +35,15 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
     1. 用户查询 -> 生成 Embedding。
     2. 执行混合 SQL：`(0.7 * 向量相似度) + (0.3 * 全文检索得分)`。
     3. 结合 `tsvector` 与 `pgvector` 确保召回率。
-- **启动弹性**: 仅需 `OPENAI_API_KEY`、`OPENAI_BASE_URL`、`OPENAI_MODEL` 三个变量即可适配主流厂商。未配置时自动降级为 Mock 模式。
-
-## 5. 后续规划
-详细的待办事项和技术演进路线请参考根目录下的 [TODO.md](../TODO.md)。
-
-## 6. 避坑指南与工程规范
-为确保项目在异构环境下的一致性，所有开发者必须遵守 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) 中记录的准则。
+- **智能代理 (Text-to-SQL)**:
+    1. 用户自然语言请求 -> `AgenticService` 构造 Prompt。
+    2. LLM 通过 Function Calling 调用 `databaseQueryTool`。
+    3. 系统自动识别并清洗 Base URL（移除重复的 `/v1`），确保请求路由正确。
+    4. 容器内屏蔽环境变量代理干扰，确保 AI API 通讯纯净。
+    5. 执行只读 SQL 并由 LLM 生成人类可读的回答。
 
 ## 5. 开发与部署
-- **Docker 模式 (推荐)**: 运行 `docker-compose up`，使用 Postgres + pgvector。
+- **Docker 模式 (推荐)**: 运行 `./lumos.sh start`。该脚本集成了 Maven 编译、镜像构建与容器编排。
+- **管理脚本**: `lumos.sh` 支持 `start`, `stop`, `restart`, `status`, `logs` 操作。
 - **Local 模式 (降级)**: 使用 Profile `local` (`-Dspring.profiles.active=local`)，启动 H2 内存数据库。
-  - **注意**: 此模式下向量检索功能不可用（或降级为 Mock），仅用于调试基础业务逻辑。
 

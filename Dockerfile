@@ -1,9 +1,6 @@
-# 使用更轻量、通用的镜像
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-
-# 拷贝本地已打包好的 jar
 COPY lumos-web/target/lumos-web-1.0.0-SNAPSHOT.jar app.jar
-
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 使用 Shell 格式以支持环境变量替换
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
