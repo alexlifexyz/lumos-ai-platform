@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.client.MockRestServiceServer;
 
-import com.lumos.core.domain.Idea;
+import com.lumos.core.domain.SearchResult;
 
 @RestClientTest(HttpRerankAdapter.class)
 @org.springframework.context.annotation.Import(HttpRerankAdapter.class)
@@ -38,9 +38,9 @@ class HttpRerankAdapterTest {
     void rerank_ShouldReturnReorderedListBasedOnScores() {
         // Arrange
         String query = "AI search";
-        List<Idea> candidates = List.of(
-            Idea.builder().id(1L).title("Doc 1").content("Content 1").build(),
-            Idea.builder().id(2L).title("Doc 2").content("Content 2").build()
+        List<SearchResult> candidates = List.of(
+            SearchResult.builder().sourceId("1").sourceName("Doc 1").content("Content 1").build(),
+            SearchResult.builder().sourceId("2").sourceName("Doc 2").content("Content 2").build()
         );
 
         // 模拟 Jina AI 响应：假设 Doc 2 (index 1) 分数更高
@@ -57,11 +57,11 @@ class HttpRerankAdapterTest {
               .andRespond(withSuccess(mockResponse, MediaType.APPLICATION_JSON));
 
         // Act
-        List<Idea> result = rerankAdapter.rerank(query, candidates);
+        List<SearchResult> result = rerankAdapter.rerank(query, candidates);
 
         // Assert
         assertEquals(2, result.size());
-        assertEquals(2L, result.get(0).getId(), "Doc 2 should be first");
-        assertEquals(1L, result.get(1).getId(), "Doc 1 should be second");
+        assertEquals("Doc 2", result.get(0).getSourceName(), "Doc 2 should be first");
+        assertEquals("Doc 1", result.get(1).getSourceName(), "Doc 1 should be second");
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import com.lumos.core.domain.Idea;
+import com.lumos.core.domain.SearchResult;
 import com.lumos.core.port.out.RerankPort;
 
 import lombok.Data;
@@ -41,7 +41,7 @@ public class HttpRerankAdapter implements RerankPort {
     }
 
     @Override
-    public List<Idea> rerank(String query, List<Idea> candidates) {
+    public List<SearchResult> rerank(String query, List<SearchResult> candidates) {
         if (candidates == null || candidates.isEmpty()) {
             return List.of();
         }
@@ -49,7 +49,7 @@ public class HttpRerankAdapter implements RerankPort {
         log.info("Reranking {} candidates using model: {}", candidates.size(), model);
 
         List<String> documents = candidates.stream()
-                .map(i -> i.getTitle() + " " + i.getContent())
+                .map(i -> i.getSourceName() + " " + i.getContent())
                 .toList();
 
         RerankRequest request = new RerankRequest(model, query, documents);
@@ -67,7 +67,6 @@ public class HttpRerankAdapter implements RerankPort {
             }
 
             // 根据返回的 score 重新排序
-            // Jina 返回的 results 包含 index 和 relevance_score
             return response.getResults().stream()
                     .sorted(Comparator.comparingDouble(RerankResult::getRelevanceScore).reversed())
                     .map(r -> candidates.get(r.getIndex()))

@@ -62,19 +62,20 @@ class IdeaControllerTest {
     void search_ShouldReturnIdeas() throws Exception {
         // Arrange
         String query = "test";
-        Idea mockIdea = Idea.builder()
-                .uuid(UUID.randomUUID())
-                .title("Result Title")
+        com.lumos.core.domain.SearchResult mockResult = com.lumos.core.domain.SearchResult.builder()
                 .content("Result Content")
+                .sourceName("Source Name")
+                .sourceType(com.lumos.core.domain.SearchResult.SourceType.IDEA)
                 .build();
         
-        when(searchService.search(eq(query), anyInt())).thenReturn(List.of(mockIdea));
+        when(searchService.search(eq(query), anyInt())).thenReturn(java.util.List.of(mockResult));
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/ideas/search")
                 .param("query", query)
                 .param("limit", "5"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("Result Title"));
+                .andExpect(jsonPath("$[0].content").value("Result Content"))
+                .andExpect(jsonPath("$[0].sourceName").value("Source Name"));
     }
 }

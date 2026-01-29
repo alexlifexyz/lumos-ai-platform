@@ -36,11 +36,16 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
     3. `DocumentParserPort` (Tika) 提取文本。
     4. `TextSplitterPort` 递归切片并保留语义重叠。
     5. 片段批量向量化并存入 `chunk_vectors`。
+- **全域集成搜索 (Unified Search)**:
+    1. 用户查询 -> 生成查询向量。
+    2. **并发召回**: 同时检索 `ideas` 表和 `document_chunks` 表（混合检索）。
+    3. **聚合与回填**: 统一包装为 `SearchResult`，自动回填文档名、页码等元数据。
+    4. **全局精排**: 通过 `RerankPort` (Jina AI) 对跨源结果进行最终相关性排序。
 - **混合检索流**: 
     1. 用户查询 -> 生成 Embedding。
     2. 执行混合 SQL：`(0.7 * 向量相似度) + (0.3 * 全文检索得分)`。
     3. 利用 `ts_content` 字段与预设 Trigger 确保 `tsvector` 与内容实时同步，显著提升检索召回率与性能。
-    4. 结果集通过 `IdeaRepositoryAdapter` 进行顺序还原，确保相关性排名准确。
+    4. 结果集通过 `IdeaRepositoryAdapter` 或 `DocumentRepositoryAdapter` 进行顺序还原，确保相关性排名准确。
 
 ## 5. 开发与部署
 - **Docker 模式 (推荐)**: 运行 `./lumos.sh start`。该脚本集成了 Maven 编译、镜像构建与容器编排。

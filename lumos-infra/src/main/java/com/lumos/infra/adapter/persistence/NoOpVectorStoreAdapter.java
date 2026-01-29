@@ -32,6 +32,12 @@ public class NoOpVectorStoreAdapter implements VectorStorePort, ChunkVectorStore
     }
 
     @Override
+    public List<Long> searchChunksHybrid(List<Double> queryVector, String keyword, int limit) {
+        log.info("[MOCK] Searching chunks hybrid (H2 mode). Returning empty list.");
+        return List.of();
+    }
+
+    @Override
     public List<Long> searchVectors(List<Double> queryVector, int limit) {
         log.info("[MOCK] Searching vectors (H2 mode). Returning empty list.");
         return List.of();

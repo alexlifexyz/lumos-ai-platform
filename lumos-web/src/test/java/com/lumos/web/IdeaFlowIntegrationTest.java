@@ -20,7 +20,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
+@org.springframework.test.context.TestPropertySource(properties = "spring.ai.openai.api-key=test-key")
 public class IdeaFlowIntegrationTest {
+
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private org.springframework.ai.chat.ChatClient chatClient;
+    
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private org.springframework.ai.chat.StreamingChatClient streamingChatClient;
+    
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private org.springframework.ai.embedding.EmbeddingClient embeddingClient;
 
     @Autowired
     private MockMvc mockMvc;

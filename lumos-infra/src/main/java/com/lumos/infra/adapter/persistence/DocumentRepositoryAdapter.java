@@ -58,6 +58,33 @@ public class DocumentRepositoryAdapter implements DocumentRepositoryPort {
                 .toList();
     }
 
+    @Override
+    public List<Chunk> findAllChunksByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return List.of();
+        
+        List<ChunkEntity> entities = chunkRepository.findAllById(ids);
+        
+        // 提取去重后的文档 ID，批量获取文档元数据
+        List<Long> docIds = entities.stream().map(ChunkEntity::getDocumentId).distinct().toList();
+        List<DocumentEntity> docs = documentRepository.findAllById(docIds);
+        java.util.Map<Long, DocumentEntity> docMap = docs.stream()
+                .collect(java.util.stream.Collectors.toMap(DocumentEntity::getId, d -> d));
+
+        // 维持输入的 ID 顺序
+        return ids.stream()
+                .flatMap(id -> entities.stream().filter(e -> e.getId().equals(id)))
+                .map(e -> {
+                    Chunk chunk = toChunkDomain(e);
+                    DocumentEntity doc = docMap.get(e.getDocumentId());
+                    if (doc != null) {
+                        chunk.setDocumentUuid(doc.getUuid().toString());
+                        chunk.setDocumentName(doc.getFilename());
+                    }
+                    return chunk;
+                })
+                .toList();
+    }
+
     private DocumentEntity toEntity(Document domain) {
         return DocumentEntity.builder()
                 .id(domain.getId())

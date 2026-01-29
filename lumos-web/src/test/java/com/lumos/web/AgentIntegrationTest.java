@@ -15,7 +15,14 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("local")
+@org.springframework.test.context.TestPropertySource(properties = "spring.ai.openai.api-key=test-key")
 public class AgentIntegrationTest {
+
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private org.springframework.ai.chat.ChatClient chatClient;
+    
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private org.springframework.ai.chat.StreamingChatClient streamingChatClient;
 
     @Autowired
     private MockMvc mockMvc;

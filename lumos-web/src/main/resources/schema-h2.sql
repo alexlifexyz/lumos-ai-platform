@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS document_chunks (
     content CLOB NOT NULL,
     chunk_index INT NOT NULL,
     metadata VARCHAR(2000),
+    ts_content CLOB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lumos.api.dto.CreateIdeaRequest;
 import com.lumos.api.dto.IdeaResponse;
 import com.lumos.core.domain.Idea;
+import com.lumos.core.domain.SearchResult;
 import com.lumos.core.service.IdeaService;
 import com.lumos.core.service.SearchService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,17 +57,16 @@ public class IdeaController {
         return toResponse(idea);
     }
 
+    @Operation(summary = "全域集成搜索", description = "在 Idea 和知识库文档片段中进行混合检索。")
     @GetMapping("/search")
-    public List<IdeaResponse> search(
+    public List<SearchResult> search(
             @RequestParam(value = "query", required = false, defaultValue = "") String query, 
             @RequestParam(value = "limit", defaultValue = "5") int limit) {
         log.info("Received search request with query: [{}], limit: [{}]", query, limit);
         if (query.isBlank()) {
             return List.of();
         }
-        return searchService.search(query, limit).stream()
-                .map(this::toResponse)
-                .toList();
+        return searchService.search(query, limit);
     }
 
     private IdeaResponse toResponse(Idea idea) {

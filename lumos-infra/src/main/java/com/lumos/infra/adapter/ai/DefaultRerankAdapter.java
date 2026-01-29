@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import com.lumos.core.domain.Idea;
+import com.lumos.core.domain.SearchResult;
 import com.lumos.core.port.out.RerankPort;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultRerankAdapter implements RerankPort {
 
     @Override
-    public List<Idea> rerank(String query, List<Idea> candidates) {
+    public List<SearchResult> rerank(String query, List<SearchResult> candidates) {
         log.debug("Reranking is disabled. Passing through {} candidates.", candidates.size());
         return candidates;
     }

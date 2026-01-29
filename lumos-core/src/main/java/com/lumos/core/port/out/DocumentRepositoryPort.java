@@ -12,4 +12,5 @@ public interface DocumentRepositoryPort {
     
     void saveChunks(List<Chunk> chunks);
     List<Chunk> findChunksByDocumentId(Long documentId);
+    List<Chunk> findAllChunksByIds(List<Long> ids);
 }
