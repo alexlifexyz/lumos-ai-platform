@@ -31,7 +31,8 @@
 
 ## 🧠 核心开发准则
 1. **语言**: 必须使用**中文**回复用户。
-2. **规范**: 提交信息遵循 Conventional Commits（中文）。
+2. **规划先行 (Planning First)**: 针对任何新功能、复杂 Bug 修复或大规模重构，必须先查阅文档并提交详细的技术执行规划大纲，获得批准后方可执行。
+3. **规范**: 提交信息遵循 Conventional Commits（中文）。
 3. **架构同步**: 任何逻辑变更必须同步更新 `docs/ARCHITECTURE.md` 和 `TODO.md`。
 4. **安全**: 
     - 严禁硬编码 Key，使用 `OPENAI_API_KEY` 环境变量。

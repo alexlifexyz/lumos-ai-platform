@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.lumos.core.port.out.ChunkVectorStorePort;
 import com.lumos.core.port.out.VectorStorePort;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +13,22 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Profile("local")
 @Slf4j
-public class NoOpVectorStoreAdapter implements VectorStorePort {
+public class NoOpVectorStoreAdapter implements VectorStorePort, ChunkVectorStorePort {
 
     @Override
     public void saveVector(Long ideaId, List<Double> vector) {
         log.info("[MOCK] Skipping vector persistence for Idea ID: {} (H2 mode)", ideaId);
+    }
+
+    @Override
+    public void saveChunkVector(Long chunkId, List<Double> vector) {
+        log.info("[MOCK] Skipping chunk vector persistence for Chunk ID: {} (H2 mode)", chunkId);
+    }
+
+    @Override
+    public List<Long> searchChunkVectors(List<Double> queryVector, int limit) {
+        log.info("[MOCK] Searching chunk vectors (H2 mode). Returning empty list.");
+        return List.of();
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
 
+import com.lumos.core.port.out.ChunkVectorStorePort;
 import com.lumos.core.port.out.VectorStorePort;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("!local") // 仅在有 Postgres 环境下激活
 @RequiredArgsConstructor
 @Slf4j
-public class PgVectorStoreAdapter implements VectorStorePort {
+public class PgVectorStoreAdapter implements VectorStorePort, ChunkVectorStorePort {
 
     private final JdbcClient jdbcClient;
 
@@ -31,6 +32,31 @@ public class PgVectorStoreAdapter implements VectorStorePort {
                 .param("version", "text-embedding-v1") 
                 .update();
         log.info("Saved vector for Idea ID: {}", ideaId);
+    }
+
+    @Override
+    public void saveChunkVector(Long chunkId, List<Double> vector) {
+        String vectorStr = vector.toString();
+        String sql = "INSERT INTO chunk_vectors (chunk_id, embedding, model_version) VALUES (:id, :embedding::vector, :version) " +
+                     "ON CONFLICT (chunk_id) DO UPDATE SET embedding = EXCLUDED.embedding";
+
+        jdbcClient.sql(sql)
+                .param("id", chunkId)
+                .param("embedding", vectorStr)
+                .param("version", "text-embedding-v1")
+                .update();
+        log.info("Saved vector for Chunk ID: {}", chunkId);
+    }
+
+    @Override
+    public List<Long> searchChunkVectors(List<Double> queryVector, int limit) {
+        String vectorStr = queryVector.toString();
+        String sql = "SELECT chunk_id FROM chunk_vectors ORDER BY embedding <=> :queryVector::vector LIMIT :limit";
+        return jdbcClient.sql(sql)
+                .param("queryVector", vectorStr)
+                .param("limit", limit)
+                .query(Long.class)
+                .list();
     }
 
     @Override
