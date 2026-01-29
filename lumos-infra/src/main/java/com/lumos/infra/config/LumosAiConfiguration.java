@@ -4,9 +4,12 @@ import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
+@EnableAsync
 @Slf4j
 public class LumosAiConfiguration {
 

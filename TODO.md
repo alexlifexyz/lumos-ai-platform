@@ -17,9 +17,12 @@
     - [x] 编写 System Prompt 注入 Schema 上下文。
     - [x] 实现结果摘要与数据可视化 DTO。
 
-### 2. RAG 检索质量优化
-- [ ] **混合检索 (Hybrid Search)**: 结合 Postgres 全文检索 (tsvector) 与向量检索 (pgvector)。
-- [ ] **重排序 (Re-ranking)**: 集成外部 Reranker 模型对检索结果进行精排。
+### 1. RAG 检索质量优化 (已完成)
+- [x] **混合检索 (Hybrid Search)**: 结合 Postgres 全文检索 (tsvector) 与向量检索 (pgvector)。
+- [x] **重排序 (Re-ranking)**: 集成外部 Reranker 模型对检索结果进行精排。
+    - [x] 定义 RerankPort 契约。
+    - [x] 实现 HttpRerankAdapter (支持 Jina/BGE)。
+    - [x] SearchService 整合“召回+精排”流程。
 
 ## ⚡ Phase 3: 高性能与异步化处理
 

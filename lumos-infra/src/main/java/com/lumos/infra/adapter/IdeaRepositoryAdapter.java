@@ -33,7 +33,13 @@ public class IdeaRepositoryAdapter implements IdeaRepositoryPort {
 
     @Override
     public List<Idea> findAllByIds(List<Long> ids) {
-        return jpaRepository.findAllById(ids).stream()
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        List<IdeaEntity> entities = jpaRepository.findAllById(ids);
+        // 按输入的 ID 顺序排序，保持检索结果的相关性顺序
+        return ids.stream()
+                .flatMap(id -> entities.stream().filter(e -> e.getId().equals(id)))
                 .map(this::toDomain)
                 .toList();
     }

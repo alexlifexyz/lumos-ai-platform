@@ -47,12 +47,16 @@ public class PgVectorStoreAdapter implements VectorStorePort {
     @Override
     public List<Long> searchHybrid(List<Double> queryVector, String keyword, int limit) {
         String vectorStr = queryVector.toString();
+        // 混合检索逻辑：
+        // 1. 向量相似度 (1 - Cosine Distance) 权重 0.7
+        // 2. 全文检索排名 (ts_rank) 权重 0.3
+        // 使用 plainto_tsquery 将用户输入转为检索词，配置使用 'simple'
         String sql = """
             SELECT i.id FROM ideas i
             LEFT JOIN idea_vectors v ON i.id = v.idea_id
             ORDER BY (
                 0.7 * (1 - COALESCE(v.embedding <=> :queryVector::vector, 1)) + 
-                0.3 * ts_rank(to_tsvector('english', i.content || ' ' || i.title), plainto_tsquery('english', :keyword))
+                0.3 * ts_rank(i.ts_content, plainto_tsquery('simple', :keyword))
             ) DESC
             LIMIT :limit
         """;

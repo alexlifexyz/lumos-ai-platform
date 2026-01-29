@@ -36,6 +36,11 @@ spring:
     openai:
       api-key: ${OPENAI_API_KEY:}
       base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+    rerank:
+      enabled: false
+      base-url: https://api.jina.ai/v1/rerank
+      api-key: ${RERANK_API_KEY:}
+      model: rerank-multilingual-v2.0
 
 # SpringDoc Configuration
 springdoc:
