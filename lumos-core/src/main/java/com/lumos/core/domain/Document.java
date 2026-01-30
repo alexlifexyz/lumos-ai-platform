@@ -19,11 +19,15 @@ public class Document {
     private String md5;         // 文件指纹，用于去重
     private Long size;          // 文件大小 (bytes)
     private Map<String, Object> metadata; // 提取的全局元数据
-    private DocumentStatus status;        // 处理状态
-    private String failureReason;         // 失败原因
+    private DocumentStatus status;        // PENDING, PROCESSING, COMPLETED, FAILED
+    private String failureReason; // 失败原因
+    
+    @Builder.Default
+    private String namespace = "default"; // 知识库隔离命名空间
+
     private Instant createdAt;
     private Instant updatedAt;
-
+    
     public enum DocumentStatus {
         PENDING,    // 待处理
         PROCESSING, // 处理中

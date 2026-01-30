@@ -85,6 +85,14 @@ public class DocumentRepositoryAdapter implements DocumentRepositoryPort {
                 .toList();
     }
 
+    @Override
+    public List<Chunk> findChunksByDocumentIdAndIndexRange(Long documentId, int startIndex, int endIndex) {
+        return chunkRepository.findByDocumentIdAndChunkIndexBetweenOrderByChunkIndexAsc(documentId, startIndex, endIndex)
+                .stream()
+                .map(this::toChunkDomain)
+                .toList();
+    }
+
     private DocumentEntity toEntity(Document domain) {
         return DocumentEntity.builder()
                 .id(domain.getId())
@@ -96,6 +104,7 @@ public class DocumentRepositoryAdapter implements DocumentRepositoryPort {
                 .metadata(domain.getMetadata())
                 .status(domain.getStatus())
                 .failureReason(domain.getFailureReason())
+                .namespace(domain.getNamespace())
                 .createdAt(domain.getCreatedAt())
                 .updatedAt(domain.getUpdatedAt())
                 .build();
@@ -112,6 +121,7 @@ public class DocumentRepositoryAdapter implements DocumentRepositoryPort {
                 .metadata(entity.getMetadata())
                 .status(entity.getStatus())
                 .failureReason(entity.getFailureReason())
+                .namespace(entity.getNamespace())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();

@@ -82,6 +82,31 @@ public class PgVectorStoreAdapter implements VectorStorePort, ChunkVectorStorePo
     }
 
     @Override
+    public List<Long> searchChunksHybrid(List<Double> queryVector, String keyword, int limit, String namespace) {
+        String vectorStr = queryVector.toString();
+        // 增加 Namespace 过滤，需要 JOIN documents 表
+        String sql = """
+            SELECT c.id FROM document_chunks c
+            JOIN documents d ON c.document_id = d.id
+            LEFT JOIN chunk_vectors v ON c.id = v.chunk_id
+            WHERE d.namespace = :namespace
+            ORDER BY (
+                0.7 * (1 - COALESCE(v.embedding <=> :queryVector::vector, 1)) + 
+                0.3 * ts_rank(c.ts_content, plainto_tsquery('simple', :keyword))
+            ) DESC
+            LIMIT :limit
+        """;
+
+        return jdbcClient.sql(sql)
+                .param("queryVector", vectorStr)
+                .param("keyword", keyword)
+                .param("limit", limit)
+                .param("namespace", namespace)
+                .query(Long.class)
+                .list();
+    }
+
+    @Override
     public List<Long> searchVectors(List<Double> queryVector, int limit) {
         String vectorStr = queryVector.toString();
         String sql = "SELECT idea_id FROM idea_vectors ORDER BY embedding <=> :queryVector::vector LIMIT :limit";

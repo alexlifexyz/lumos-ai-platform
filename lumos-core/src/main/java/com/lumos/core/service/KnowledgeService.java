@@ -35,12 +35,13 @@ public class KnowledgeService {
      * 初始同步阶段：保存文档元数据
      */
     @Transactional
-    public Document registerDocument(String filename, String contentType, long size) {
+    public Document registerDocument(String filename, String contentType, long size, String namespace) {
         Document doc = Document.builder()
                 .uuid(UUID.randomUUID().toString())
                 .filename(filename)
                 .contentType(contentType)
                 .size(size)
+                .namespace(namespace != null ? namespace : "default")
                 .status(DocumentStatus.PENDING)
                 .createdAt(java.time.Instant.now())
                 .updatedAt(java.time.Instant.now())

@@ -34,10 +34,10 @@
 - [x] **多 Agent 协作 (Router)**:
     - 实现“意图识别 Agent”，自动判断用户意图是查数据库 (SQL) 还是查文档 (RAG)。
 
-### Phase 7: 高级 RAG 策略 (进阶)
-- [ ] **多知识库隔离 (Multi-Tenancy)**: 支持不同用户/租户拥有独立的知识库空间。
-- [ ] **父子检索增强 (Parent Document Retrieval)**: 命中 Chunk 后，自动召回其父文档或前后文窗口（Window Retrieval）。
-- [ ] **图谱增强 (GraphRAG)**: 尝试提取实体关系构建知识图谱（可选）。
+### Phase 7: 高级 RAG 策略 (已完成)
+- [x] **多知识库隔离 (Multi-Tenancy)**: 支持不同用户/租户拥有独立的知识库空间。
+- [x] **父子检索增强 (Parent Document Retrieval)**: 命中 Chunk 后，自动召回其父文档或前后文窗口（Window Retrieval）。
+- [ ] **图谱增强 (GraphRAG)**: 尝试提取实体关系构建知识图谱（可选，推迟）。
 
 ### Phase 8: 前端与可视化
 - [ ] **审计仪表盘**: 可视化展示 Token 消耗趋势与模型成本。

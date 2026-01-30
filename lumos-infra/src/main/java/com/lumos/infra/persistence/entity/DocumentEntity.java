@@ -54,7 +54,12 @@ public class DocumentEntity {
     @Enumerated(EnumType.STRING)
     private DocumentStatus status;
 
+    @Column(columnDefinition = "TEXT")
     private String failureReason;
+
+    @Column(nullable = false, length = 50)
+    @Builder.Default
+    private String namespace = "default";
 
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private Instant createdAt;

@@ -15,8 +15,12 @@ public class Idea {
     private UUID uuid;
     private String title;
     private String content;
-    private List<String> tags;
-    private Map<String, Object> metadata;
+    private List<String> tags;     // 标签
+    private Map<String, Object> metadata; // 扩展元数据
+    
+    @Builder.Default
+    private String namespace = "default"; // 知识库隔离命名空间
+
     private Instant createdAt;
     private Instant updatedAt;
 

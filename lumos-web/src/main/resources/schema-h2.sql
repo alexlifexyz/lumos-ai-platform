@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS ideas (
     tags VARCHAR(1000),
     metadata VARCHAR(2000),
     ts_content CLOB,
+    namespace VARCHAR(50) DEFAULT 'default' NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS documents (
     metadata VARCHAR(2000),
     status VARCHAR(50),
     failure_reason CLOB,
+    namespace VARCHAR(50) DEFAULT 'default' NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

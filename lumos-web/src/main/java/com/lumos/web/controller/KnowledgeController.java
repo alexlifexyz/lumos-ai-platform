@@ -33,14 +33,19 @@ public class KnowledgeController {
     @Operation(summary = "上传文档", description = "上传 PDF 或其他格式文档，Agent 会自动进行解析、切片并存入向量库。")
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UploadDocumentResponse upload(@RequestParam("file") MultipartFile file) throws IOException {
-        log.info("Received file upload request: {}, size: {}", file.getOriginalFilename(), file.getSize());
+    public UploadDocumentResponse upload(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "namespace", required = false, defaultValue = "default") String namespace
+    ) throws IOException {
+        log.info("Received file upload request: {}, size: {}, namespace: {}", 
+                file.getOriginalFilename(), file.getSize(), namespace);
         
         // 1. 同步阶段：注册文档元数据
         Document doc = knowledgeService.registerDocument(
                 file.getOriginalFilename(), 
                 file.getContentType(), 
-                file.getSize()
+                file.getSize(),
+                namespace
         );
 
         // 2. 异步阶段：启动处理流水线
