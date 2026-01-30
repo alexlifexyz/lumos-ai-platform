@@ -93,6 +93,13 @@ public class DocumentRepositoryAdapter implements DocumentRepositoryPort {
                 .toList();
     }
 
+    @Override
+    public List<Document> findAllDocuments() {
+        return documentRepository.findAll().stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
     private DocumentEntity toEntity(Document domain) {
         return DocumentEntity.builder()
                 .id(domain.getId())

@@ -15,4 +15,7 @@ public interface DocumentRepositoryPort {
     List<Chunk> findAllChunksByIds(List<Long> ids);
     // Context Window Retrieval
     List<Chunk> findChunksByDocumentIdAndIndexRange(Long documentId, int startIndex, int endIndex);
+
+    // Knowledge Base Management
+    List<Document> findAllDocuments();
 }

@@ -18,6 +18,7 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 
 ## 2. 技术栈
 - **Backend**: Java 17, Spring Boot 3.2.5, Spring AI 0.8.1
+- **Frontend**: React 18, Vite, Material UI (嵌入式 SPA)
 - **Database**: PostgreSQL 16 + pgvector (向量存储)
 - **AI Protocol**: 统一采用 OpenAI 兼容协议，支持 OpenAI, Kimi, 智谱, 千问等。
 - **Infra**: Docker, Redis
@@ -28,6 +29,7 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 | `lumos-api` | 共享内核：DTOs, Exceptions, 公共工具类。 |
 | `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、智能代理 (`AgenticService`)、知识入库 Pipeline (`KnowledgeService`)、动态 Prompt 管理 (`PromptService`)、意图识别与路由 (`IntentRouterService`)。支持混合检索 (Hybrid Search) 与父子索引切片。 |
 | `lumos-infra`| 基础设施：`LumosAiConfiguration` (极简 OpenAI 协议工厂)、`PgVectorStoreAdapter` (混合检索 SQL 实现)、`TikaDocumentParserAdapter` (ETL 解析)、`RecursiveTextSplitterAdapter` (语义切片)、`LocalGuardrailAdapter` (敏感词与 PII 脱敏)。 |
+| `lumos-web` | Web 接入层：REST API Controllers, 前端静态资源 (Embedded SPA), 全局异常处理, Swagger UI。 |
 
 ## 4. 核心工作流
 - **多租户隔离**:

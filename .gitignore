@@ -41,3 +41,4 @@ logs/
 ### Data ###
 data/
 .env
+lumos-web/src/main/frontend/node_modules

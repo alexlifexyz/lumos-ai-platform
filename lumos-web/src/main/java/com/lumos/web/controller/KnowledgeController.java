@@ -1,9 +1,11 @@
 package com.lumos.web.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 public class KnowledgeController {
 
     private final KnowledgeService knowledgeService;
+
+    @Operation(summary = "列出文档", description = "获取系统内所有已注册的文档列表。")
+    @GetMapping("/documents")
+    public List<Document> listDocuments() {
+        return knowledgeService.getAllDocuments();
+    }
 
     @Operation(summary = "上传文档", description = "上传 PDF 或其他格式文档，Agent 会自动进行解析、切片并存入向量库。")
     @PostMapping("/upload")

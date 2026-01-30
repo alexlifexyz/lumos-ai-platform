@@ -97,4 +97,9 @@ public class KnowledgeService {
         doc.setUpdatedAt(java.time.Instant.now());
         documentRepository.saveDocument(doc);
     }
+
+    @Transactional(readOnly = true)
+    public List<Document> getAllDocuments() {
+        return documentRepository.findAllDocuments();
+    }
 }
