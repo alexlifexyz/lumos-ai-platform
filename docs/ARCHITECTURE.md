@@ -26,16 +26,17 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
 | 模块 | 职责 |
 |------|------|
 | `lumos-api` | 共享内核：DTOs, Exceptions, 公共工具类。 |
-| `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、智能代理 (`AgenticService`)、知识入库 Pipeline (`KnowledgeService`)、Domain Models。支持混合检索 (Hybrid Search) 与父子索引切片。 |
-| `lumos-infra`| 基础设施：`LumosAiConfiguration` (极简 OpenAI 协议工厂)、`PgVectorStoreAdapter` (混合检索 SQL 实现)、`TikaDocumentParserAdapter` (ETL 解析)、`RecursiveTextSplitterAdapter` (语义切片)。 |
+| `lumos-core`| 核心业务：RAG 编排 (`SearchService`)、智能代理 (`AgenticService`)、知识入库 Pipeline (`KnowledgeService`)、动态 Prompt 管理 (`PromptService`)、意图识别与路由 (`IntentRouterService`)。支持混合检索 (Hybrid Search) 与父子索引切片。 |
+| `lumos-infra`| 基础设施：`LumosAiConfiguration` (极简 OpenAI 协议工厂)、`PgVectorStoreAdapter` (混合检索 SQL 实现)、`TikaDocumentParserAdapter` (ETL 解析)、`RecursiveTextSplitterAdapter` (语义切片)、`LocalGuardrailAdapter` (敏感词与 PII 脱敏)。 |
 
 ## 4. 核心工作流
-- **知识入库 Pipeline (ETL)**:
-    1. 用户上传文件 -> `KnowledgeController` 注册文档。
-    2. 异步触发 `KnowledgeService`。
-    3. `DocumentParserPort` (Tika) 提取文本。
-    4. `TextSplitterPort` 递归切片并保留语义重叠。
-    5. 片段批量向量化并存入 `chunk_vectors`。
+- **Agent 智能路由与安全流**:
+    1. 用户输入 -> `AgenticService`.
+    2. **输入审计与安全**: `GuardrailPort` 拦截敏感词。
+    3. **意图识别**: `IntentRouterService` 通过 LLM 判断是 `RAG`, `SQL` 还是 `GENERAL` 意图。
+    4. **动态 Prompt 注入**: 根据意图从 `PromptService` 加载对应的数据库配置模板。
+    5. **知识增强**: 若为 RAG 意图，调用 `SearchService` 获取上下文并注入模板。
+    6. **输出清洗**: `GuardrailPort` 对 LLM 输出进行 PII 脱敏处理。
 - **全域集成搜索 (Unified Search)**:
     1. 用户查询 -> 生成查询向量。
     2. **并发召回**: 同时检索 `ideas` 表和 `document_chunks` 表（混合检索）。

@@ -41,7 +41,99 @@ CREATE TABLE IF NOT EXISTS document_chunks (
 );
 
 CREATE TABLE IF NOT EXISTS chunk_vectors (
+
     chunk_id BIGINT PRIMARY KEY,
+
     embedding VARCHAR(MAX),
+
     model_version VARCHAR(50)
+
 );
+
+
+
+CREATE TABLE IF NOT EXISTS prompts (
+
+
+
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+
+
+    code VARCHAR(50) NOT NULL UNIQUE,
+
+
+
+    name VARCHAR(100) NOT NULL,
+
+
+
+    content CLOB NOT NULL,
+
+
+
+    description CLOB,
+
+
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+
+
+
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+
+
+
+);
+
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+
+
+
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+
+
+    trace_id VARCHAR(50),
+
+
+
+    operation_type VARCHAR(50),
+
+
+
+    model_name VARCHAR(50),
+
+
+
+    prompt_tokens INT,
+
+
+
+    completion_tokens INT,
+
+
+
+    total_tokens INT,
+
+
+
+    duration_ms BIGINT,
+
+
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+
+
+
+);
+
+
+
+

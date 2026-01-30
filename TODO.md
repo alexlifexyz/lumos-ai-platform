@@ -24,14 +24,14 @@
 
 ## 🚀 待办计划 (Backlog for Next Session)
 
-### Phase 6: Agent 深度编排与安全 (高优先级)
-- [ ] **动态 Prompt 管理**: 
+### Phase 6: Agent 深度编排与安全 (已完成)
+- [x] **动态 Prompt 管理**: 
     - 将硬编码的 System Prompt 迁移至数据库。
     - 支持通过 API 热更新 Prompt 模板（无需重启）。
-- [ ] **内容安全 (Guardrails)**: 
+- [x] **内容安全 (Guardrails)**: 
     - 输入/输出敏感词过滤 (Toxicity Check)。
     - PII (个人隐私信息) 自动脱敏。
-- [ ] **多 Agent 协作 (Router)**:
+- [x] **多 Agent 协作 (Router)**:
     - 实现“意图识别 Agent”，自动判断用户意图是查数据库 (SQL) 还是查文档 (RAG)。
 
 ### Phase 7: 高级 RAG 策略 (进阶)
