@@ -10,6 +10,7 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.lumos.core.annotation.Auditable;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 
 @Component
+@Profile("!local")
 @Slf4j
 public class SpringAiChatAdapter implements ChatPort {
 

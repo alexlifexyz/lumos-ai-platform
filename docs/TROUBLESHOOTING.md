@@ -40,5 +40,17 @@ Repository 定义在 `infra` 模块，而启动类在 `web` 模块，导致 Bean
 ### 避坑准则
 - 在启动类上必须显式配置 `@EntityScan` 和 `@EnableJpaRepositories`，并精确指定基础包路径（如 `com.lumos.infra`）。
 
+## 5. 启动失败：OpenAI API Key must be set
+
+### 问题描述
+在 `local` profile 下启动应用时，报错 `java.lang.IllegalArgumentException: OpenAI API key must be set`。
+
+### 原因
+Spring AI 的自动配置类 `OpenAIAutoConfiguration` 会检查 API Key。如果 Bean 中引用了 `OpenAiChatClient`，即使在 `local` 环境也会触发检查。
+
+### 避坑准则
+- 确保在 `local` 环境下，不加载依赖 OpenAI 的 Bean（使用 `@Profile("!local")`）。
+- 提供一个 Mock 实现（使用 `@Profile("local")`）。
+
 ---
 *保持更新：任何耗时超过 30 分钟的 Debug 过程都值得记录在此。*

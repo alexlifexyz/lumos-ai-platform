@@ -37,8 +37,17 @@ Lumos 是一个企业级 AI 知识与数据中台，基于 Java 生态构建，�
     - **API**: 所有上传与检索接口均支持可选的 `namespace` 参数，默认为 `default`。
 - **知识入库 Pipeline (ETL)**:
     1. 用户上传文件 -> `KnowledgeController` 注册文档 (支持 Namespace)。
+- **混合检索流**: 
+    1. 用户查询 -> 生成 Embedding。
+    2. 执行混合 SQL：`(0.7 * 向量相似度) + (0.3 * 全文检索得分)`。
+    3. 利用 `ts_content` 字段与预设 Trigger 确保 `tsvector` 与内容实时同步，显著提升检索召回率与性能。
+    4. 结果集通过 `IdeaRepositoryAdapter` 或 `DocumentRepositoryAdapter` 进行顺序还原，确保相关性排名准确。
+
 ## 5. 开发与部署
+- **Local 模式 (降级)**: 
+    - 使用 Profile `local` (`-Dspring.profiles.active=local`)。
+    - **Database**: 启动 H2 内存数据库，使用 `schema-h2.sql` 初始化。
+    - **AI Adapters**: 自动激活 `MockChatAdapter` 和 `MockEmbeddingAdapter`，绕过 OpenAI API Key 强制检查，支持无 Key 环境下的逻辑开发与前端调试。
 - **Docker 模式 (推荐)**: 运行 `./lumos.sh start`。该脚本集成了 Maven 编译、镜像构建与容器编排。
 - **管理脚本**: `lumos.sh` 支持 `start`, `stop`, `restart`, `status`, `logs` 操作。
-- **Local 模式 (降级)**: 使用 Profile `local` (`-Dspring.profiles.active=local`)，启动 H2 内存数据库。
 
