@@ -2,7 +2,7 @@ package com.lumos.infra.adapter.ai;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
+import com.lumos.core.annotation.Auditable;
 import com.lumos.core.port.out.ChatPort;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import reactor.core.publisher.Flux;
 public class MockChatAdapter implements ChatPort {
 
     @Override
+    @Auditable(operationType = "CHAT")
     public String chat(String systemPrompt, String userQuery) {
         log.info("[MOCK CHAT] System: {}\nUser:જી", systemPrompt, userQuery);
         // 如果是意图识别，返回简单的结果
@@ -24,6 +25,7 @@ public class MockChatAdapter implements ChatPort {
     }
 
     @Override
+    @Auditable(operationType = "CHAT")
     public Flux<String> streamChat(String systemPrompt, String userQuery) {
         log.info("[MOCK STREAM CHAT] System: {}\nUser:જી", systemPrompt, userQuery);
         return Flux.just("这是", "一个", "本地", "模拟", "的", "流式", "回复", "。");

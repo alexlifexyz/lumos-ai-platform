@@ -77,7 +77,7 @@ class SearchServiceTest {
         when(embeddingPort.embed(anyString())).thenReturn(mockVector);
         // 为了简化，不返回 Idea
         when(vectorStorePort.searchHybrid(any(), anyString(), any(Integer.class))).thenReturn(List.of());
-        when(chunkVectorStore.searchChunksHybrid(any(), anyString(), any(Integer.class))).thenReturn(mockChunkIds);
+        when(chunkVectorStore.searchChunksHybrid(any(), anyString(), any(Integer.class), any())).thenReturn(mockChunkIds);
         when(ideaRepository.findAllByIds(any())).thenReturn(List.of());
         when(documentRepository.findAllChunksByIds(mockChunkIds)).thenReturn(List.of(originalChunk));
         
